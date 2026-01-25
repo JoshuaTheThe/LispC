@@ -1,5 +1,30 @@
 #include "parser.hpp"
 
+AST *Parser::ParseStruct(void)
+{
+        Tokeniser::Token tok = Consume();
+        AST *fnNode = new AST(Peek().Identifier, AST::AST_STRUCT);
+
+        if (Peek().Type == Tokeniser::TYPE_IDENTIFIER)
+        {
+                Tokeniser::Token nameTok = Consume();
+        }
+        else
+        {
+                std::cerr << "Error: structure missing name!" << std::endl;
+                return nullptr;
+        }
+
+        fnNode->FunctionArguments.clear();
+        while (Peek().Type == Tokeniser::TYPE_IDENTIFIER)
+        {
+                /* Reused field */
+                fnNode->FunctionArguments.push_back(Consume().Identifier);
+        }
+
+        return fnNode;
+}
+
 AST *Parser::ParsePrimary(void)
 {
         Tokeniser::Token tok = Peek();
@@ -38,6 +63,10 @@ AST *Parser::ParsePrimary(void)
                         else if (first.Identifier == "extern")
                         {
                                 node = ParseExtern();
+                        }
+                        else if (first.Identifier == "struct")
+                        {
+                                node = ParseStruct();
                         }
                         else if (first.Identifier == "declare")
                         {

@@ -20,6 +20,12 @@ void CodeGenerator::Generate(AST *tree)
 {
         switch (tree->GetType())
         {
+        case AST::AST_STRUCT:
+                Structure Struc;
+                Struc.name = tree->GetIdentifier();
+                Struc.elements = tree->FunctionArguments; /* reused field */
+                structures.push_back(Struc);
+                break;
         case AST::AST_FUNCTION:
                 GenerateFunction(tree);
                 break;

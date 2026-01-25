@@ -29,6 +29,12 @@ private:
                 }
         };
 
+        struct Structure
+        {
+                std::string name;
+                std::vector<std::string> elements;
+        };
+
         struct Function
         {
                 std::string Name;
@@ -43,8 +49,9 @@ private:
         };
 
         std::vector<std::string> lines;
-        std::vector<Function> functions;
         std::vector<std::string> strings;
+        std::vector<Function> functions;
+        std::vector<Structure> structures;
 
         std::stack<Info> stack;
 public:

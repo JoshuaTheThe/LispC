@@ -23,6 +23,7 @@ public:
                 AST_DECLARE,
                 AST_IF,
                 AST_STRING,
+                AST_STRUCT,
                 AST_EXTERN,
         };
 
@@ -66,6 +67,7 @@ public:
         AST *ParseFunction(void);
         AST *ParseIf(void);
         AST *ParseExtern(void);
+        AST *ParseStruct(void);
         Tokeniser::Token Peek(void);
         Tokeniser::Token Consume(void);
 };
