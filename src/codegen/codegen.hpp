@@ -81,6 +81,8 @@ private:
 
         Type left, right;
 
+        size_t labelCounter = 0;
+
 public:
         void GenerateFunction(AST *Tree);
         void GenerateBody(AST *Tree);
@@ -95,6 +97,11 @@ public:
         Variable *FindVar(AST *tree);
         std::vector<std::string> GetLines(void);
         std::vector<std::string> GetStrings(void);
+
+        size_t NewLabel(void)
+        {
+                return labelCounter++;
+        }
 };
 
 #endif
