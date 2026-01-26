@@ -18,17 +18,20 @@ void CodeGenerator::GenerateFunction(AST *tree)
         fn.argcount = tree->FunctionArguments.size();
         fn.Name = info.FunctionName;
         functions.push_back(fn);
-        
+
         size_t skipLabel = lines.size();
-        this->lines.push_back("\tjmp "+info.FunctionName+".m" + std::to_string(skipLabel));
+        this->lines.push_back("\tjmp " + info.FunctionName + ".m" + std::to_string(skipLabel));
         this->lines.push_back("\tglobal " + info.FunctionName);
         this->lines.push_back(info.FunctionName + ":");
         this->lines.push_back("\tpush ebp");
         this->lines.push_back("\tmov ebp, esp");
         info.ebpOffset = 4 + (4 * tree->FunctionArguments.size());
-        for (auto &argument : tree->FunctionArguments)
+
+        for (auto it = tree->FunctionArguments.rbegin();
+             it != tree->FunctionArguments.rend();
+             ++it)
         {
-                Variable var = Variable(argument, info.ebpOffset);
+                Variable var = Variable(*it, info.ebpOffset);
                 info.ebpOffset -= 4;
                 info.vars.push_back(var);
         }
@@ -44,5 +47,5 @@ void CodeGenerator::GenerateFunction(AST *tree)
         this->lines.push_back("\tmov esp, ebp");
         this->lines.push_back("\tpop ebp");
         this->lines.push_back("\tret");
-        this->lines.push_back(info.FunctionName+".m" + std::to_string(skipLabel) + ":");
+        this->lines.push_back(info.FunctionName + ".m" + std::to_string(skipLabel) + ":");
 }
