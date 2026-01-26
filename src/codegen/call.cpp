@@ -39,95 +39,46 @@ void CodeGenerator::GenerateCall(AST *tree)
         else if (Function == "mul" && argc == 2)
         {
                 _POP_EBX_EAX;
-                if (left.TypeType == Type::TYPE_INTEGER == right.TypeType)
-                {
-                        this->lines.push_back("\tmul ebx");
-                        this->lines.push_back("\tpush eax");
-                }
-                else
-                {
-                        std::cerr << "Error: unsupported pointer operation" << std::endl;
-                }
+                this->lines.push_back("\tmul ebx");
+                this->lines.push_back("\tpush eax");
         }
         else if (Function == "div" && argc == 2)
         {
                 _POP_EBX_EAX;
-                if (left.TypeType == Type::TYPE_INTEGER == right.TypeType)
-                {
-                        this->lines.push_back("\tcdq");
-                        this->lines.push_back("\tdiv ebx");
-                        this->lines.push_back("\tpush eax");
-                }
-                else
-                {
-                        std::cerr << "Error: unsupported pointer operation" << std::endl;
-                }
+                this->lines.push_back("\tcdq");
+                this->lines.push_back("\tdiv ebx");
+                this->lines.push_back("\tpush eax");
         }
         else if (Function == "mod" && argc == 2)
         {
                 _POP_EBX_EAX;
-                if (left.TypeType == Type::TYPE_INTEGER == right.TypeType)
-                {
-                        this->lines.push_back("\tcdq");
-                        this->lines.push_back("\tdiv ebx");
-                        this->lines.push_back("\tpush edx");
-                }
-                else
-                {
-                        std::cerr << "Error: unsupported pointer operation" << std::endl;
-                }
+                this->lines.push_back("\tcdq");
+                this->lines.push_back("\tdiv ebx");
+                this->lines.push_back("\tpush edx");
         }
         else if (Function == "and" && argc == 2)
         {
                 _POP_EBX_EAX;
-                if (left.TypeType == Type::TYPE_INTEGER == right.TypeType)
-                {
-                        this->lines.push_back("\tand eax, ebx");
-                        this->lines.push_back("\tpush eax");
-                }
-                else
-                {
-                        std::cerr << "Error: unsupported pointer operation" << std::endl;
-                }
+                this->lines.push_back("\tand eax, ebx");
+                this->lines.push_back("\tpush eax");
         }
         else if (Function == "or" && argc == 2)
         {
                 _POP_EBX_EAX;
-                if (left.TypeType == Type::TYPE_INTEGER == right.TypeType)
-                {
-                        this->lines.push_back("\tor eax, ebx");
-                        this->lines.push_back("\tpush eax");
-                }
-                else
-                {
-                        std::cerr << "Error: unsupported pointer operation" << std::endl;
-                }
+                this->lines.push_back("\tor eax, ebx");
+                this->lines.push_back("\tpush eax");
         }
         else if (Function == "xor" && argc == 2)
         {
                 _POP_EBX_EAX;
-                if (left.TypeType == Type::TYPE_INTEGER == right.TypeType)
-                {
-                        this->lines.push_back("\txor eax, ebx");
-                        this->lines.push_back("\tpush eax");
-                }
-                else
-                {
-                        std::cerr << "Error: unsupported pointer operation" << std::endl;
-                }
+                this->lines.push_back("\txor eax, ebx");
+                this->lines.push_back("\tpush eax");
         }
         else if (Function == "not" && argc == 1)
         {
-                if (left.TypeType == Type::TYPE_INTEGER == right.TypeType)
-                {
-                        this->lines.push_back("\tpop eax");
-                        this->lines.push_back("\txor eax, -1");
-                        this->lines.push_back("\tpush eax");
-                }
-                else
-                {
-                        std::cerr << "Error: unsupported pointer operation" << std::endl;
-                }
+                this->lines.push_back("\tpop eax");
+                this->lines.push_back("\txor eax, -1");
+                this->lines.push_back("\tpush eax");
         }
         else if (Function == "eq" && argc == 2)
         {
