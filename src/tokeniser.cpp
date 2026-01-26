@@ -104,6 +104,15 @@ Tokeniser::Token Tokeniser::Tokenise(void)
                 X = this->Advance();
         } while (this->IsWhiteSpace(X) && this->Position < this->Input.size());
 
+        if (X == ';')
+        {
+                while (!(X == '\n' || X == '\r'))
+                {
+                        X = this->Advance();
+                }
+                return Tokenise();
+        }
+
         switch (X)
         {
         case '(':
