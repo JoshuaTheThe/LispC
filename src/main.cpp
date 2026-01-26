@@ -27,6 +27,10 @@ void display(AST *tree, size_t depth = 0)
         case AST::AST_IDENTIFIER:
                 std::cerr << "Identifier: " << tree->GetIdentifier() << "\n";
                 break;
+               
+        case AST::AST_STRUCT:
+                std::cerr << "Structure: " << tree->GetIdentifier() << "\n";
+                break;
 
         case AST::AST_FUNCTION:
         {

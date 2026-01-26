@@ -17,10 +17,38 @@
 class CodeGenerator
 {
 private:
+        struct Structure
+        {
+                std::string name;
+                std::vector<std::string> elements;
+        };
+
+        struct Type
+        {
+                // lol
+                enum
+                {
+                        TYPE_INTEGER,
+                        TYPE_STRUCT,
+                } TypeType;
+                union
+                {
+                        int Integer;
+                        Structure *Struc;
+                } as;
+
+                Type(void)
+                {
+                        TypeType = TYPE_INTEGER;
+                        as.Integer = 0;
+                }
+        };
+
         struct Variable
         {
                 std::string VarName;
                 int EbpOffset;
+                Type type;
 
                 Variable(const std::string Name, const int Offset)
                 {
@@ -29,16 +57,11 @@ private:
                 }
         };
 
-        struct Structure
-        {
-                std::string name;
-                std::vector<std::string> elements;
-        };
-
         struct Function
         {
                 std::string Name;
                 size_t argcount;
+                Type type;
         };
 
         struct Info
@@ -54,6 +77,10 @@ private:
         std::vector<Structure> structures;
 
         std::stack<Info> stack;
+        std::stack<Type> typestack;
+
+        Type left, right;
+
 public:
         void GenerateFunction(AST *Tree);
         void GenerateBody(AST *Tree);
@@ -62,7 +89,10 @@ public:
         void GenerateCall(AST *Tree);
         void GenerateIf(AST *Tree);
         void GenerateString(AST *Tree);
+        void GenerateStructureReference(AST *tree);
         void Generate(AST *Tree);
+        Structure *FindStruc(AST *tree);
+        Variable *FindVar(AST *tree);
         std::vector<std::string> GetLines(void);
         std::vector<std::string> GetStrings(void);
 };

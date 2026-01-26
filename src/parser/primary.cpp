@@ -92,6 +92,42 @@ AST *Parser::ParsePrimary(void)
                                         node->AddChild(ParseExpression());
                                 }
                         }
+                        else if (first.Identifier == "element")
+                        {
+                                Consume();
+                                auto name = Consume();
+                                if (name.Type != Tokeniser::TYPE_IDENTIFIER)
+                                {
+                                        std::cerr << "Error: Syntax error" << std::endl;
+                                }
+                                auto element = Consume();
+                                if (element.Type != Tokeniser::TYPE_IDENTIFIER)
+                                {
+                                        std::cerr << "Error: Syntax error" << std::endl;
+                                }
+                                node = new AST(name.Identifier, AST::AST_ELEM);
+                                node->FunctionArguments.push_back(element.Identifier);
+                        }
+                        else if (first.Identifier == "sete")
+                        {
+                                Consume();
+                                auto name = Consume();
+                                if (name.Type != Tokeniser::TYPE_IDENTIFIER)
+                                {
+                                        std::cerr << "Error: Syntax error" << std::endl;
+                                }
+                                auto element = Consume();
+                                if (element.Type != Tokeniser::TYPE_IDENTIFIER)
+                                {
+                                        std::cerr << "Error: Syntax error" << std::endl;
+                                }
+                                node = new AST(name.Identifier, AST::AST_SETE);
+                                node->FunctionArguments.push_back(element.Identifier);
+                                if (Peek().Type != Tokeniser::TYPE_RPAREN && Peek().Type != Tokeniser::TYPE_NONE)
+                                {
+                                        node->AddChild(ParseExpression());
+                                }
+                        }
                         else
                         {
                                 Tokeniser::Token tok = Consume();

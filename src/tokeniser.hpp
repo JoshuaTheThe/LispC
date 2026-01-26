@@ -30,9 +30,9 @@ public:
         };
 
 private:
-        const std::array<std::string, 23> Keywords =
+        const std::array<std::string, 26> Keywords =
             {
-                "fn", "if", "declare", "set", "add", "sub", "mul", "div", "mod", "eq", "neq", "lt", "gt", "lte", "gte", "deref", "setderef", "and", "or", "xor", "not", "alloca", "extern"
+                "fn", "if", "declare", "struct", "set", "sete", "element", "add", "sub", "mul", "div", "mod", "eq", "neq", "lt", "gt", "lte", "gte", "deref", "setderef", "and", "or", "xor", "not", "alloca", "extern"
             };
         std::string_view Input;
         std::vector<Token> Output;

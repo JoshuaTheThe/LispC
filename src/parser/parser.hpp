@@ -20,6 +20,8 @@ public:
                 AST_IDENTIFIER,
                 AST_CALL,
                 AST_SET,
+                AST_SETE,
+                AST_ELEM,
                 AST_DECLARE,
                 AST_IF,
                 AST_STRING,
@@ -43,6 +45,7 @@ public:
         const std::vector<AST *> &GetChildren() const { return Children; }
         ASTType GetType() const { return Type; }
         const std::string &GetIdentifier() const { return Identifier; }
+        void SetIdentifier(std::string i) { Identifier = i; }
         int64_t GetNumber() const { return Number; }
 
         ~AST()
