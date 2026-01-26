@@ -104,67 +104,6 @@ void CodeGenerator::Generate(AST *tree)
                 this->lines.push_back("\textern " + tree->GetIdentifier());
                 break;
         }
-        case AST::AST_ELEM:
-        {
-                Variable *variable = FindVar(tree);
-                if (!variable || variable->type.TypeType != Type::TYPE_STRUCT)
-                {
-                        std::cerr << "Error: Cannot get element of integer" << std::endl;
-                        return;
-                }
-
-                Structure *struc = variable->type.as.Struc;
-
-                long Offset = 0;
-                for (size_t i = 0; i < struc->elements.size(); i++)
-                {
-                        if (struc->elements[i] == tree->FunctionArguments[0])
-                                break;
-                        Offset += 4;
-                }
-                this->lines.push_back("\tpush dword [ebp+" + std::to_string(variable->EbpOffset) + "]");
-                this->lines.push_back("\tpop ebx");
-                this->lines.push_back("\tadd ebx, " + std::to_string(Offset));
-                this->lines.push_back("\tpush dword [ebx]");
-
-                Type type;
-                type.TypeType = Type::TYPE_INTEGER;
-                type.as.Integer = -1;
-                typestack.push(type);
-                break;
-        }
-        case AST::AST_SETE:
-        {
-                Variable *variable = FindVar(tree);
-                if (!variable || variable->type.TypeType != Type::TYPE_STRUCT)
-                {
-                        std::cerr << "Error: Cannot set element of integer" << std::endl;
-                        return;
-                }
-
-                for (auto &x : tree->GetChildren())
-                        Generate(x);
-
-                typestack.pop();
-
-                Structure *struc = variable->type.as.Struc;
-
-                long Offset = 0;
-                for (size_t i = 0; i < struc->elements.size(); i++)
-                {
-                        if (struc->elements[i] == tree->FunctionArguments[0])
-                                break;
-                        Offset += 4;
-                }
-
-                this->lines.push_back("\tpop ebx");
-                this->lines.push_back("\tpush dword [ebp+" + std::to_string(variable->EbpOffset) + "]");
-                this->lines.push_back("\tpop eax");
-                this->lines.push_back("\tadd eax, " + std::to_string(Offset));
-                this->lines.push_back("\tmov [eax], ebx");
-                break;
-        }
-
         case AST::AST_SET:
         {
                 Variable *variable = FindVar(tree);

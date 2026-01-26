@@ -194,6 +194,42 @@ void CodeGenerator::GenerateCall(AST *tree)
                 this->lines.push_back("\tsub esp, eax");
                 this->lines.push_back("\tpush esp");
         }
+        else if (Function == "element" && argc == 2)
+        {
+                this->left = typestack.top();
+                if (this->left.TypeType == Type::TYPE_INTEGER)
+                {
+                        this->typestack.pop();
+                        this->lines.push_back("\tpop edx");
+                        this->lines.push_back("\tpop ebx");
+                        this->lines.push_back("\tadd ebx, edx");
+                        this->lines.push_back("\tpush dword [ebx]");
+                }
+
+                Type type;
+                type.TypeType = Type::TYPE_INTEGER;
+                type.as.Integer = -1;
+                typestack.push(type);
+        }
+        else if (Function == "set_element" && argc == 3)
+        {
+                this->left = typestack.top();
+                if (this->left.TypeType == Type::TYPE_INTEGER)
+                {
+                        this->typestack.pop();
+                        this->typestack.pop();
+                        this->typestack.pop();
+                        this->lines.push_back("\tpop edx");
+                        this->lines.push_back("\tpop ebx");
+                        this->lines.push_back("\tadd ebx, edx");
+                        this->lines.push_back("\tpop dword [ebx]");
+                }
+
+                Type type;
+                type.TypeType = Type::TYPE_INTEGER;
+                type.as.Integer = -1;
+                typestack.push(type);
+        }
         else
         {
                 this->lines.push_back("\tcall " + Function);

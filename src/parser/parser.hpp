@@ -20,8 +20,6 @@ public:
                 AST_IDENTIFIER,
                 AST_CALL,
                 AST_SET,
-                AST_SETE,
-                AST_ELEM,
                 AST_DECLARE,
                 AST_IF,
                 AST_STRING,

@@ -1,9 +1,6 @@
-(fn main(
-        (struct Person a b c)
+(fn main (
         (declare K)
-        (set K Person)
-        (sete K a 3)
-        (sete K b 2)
-        (sete K c 1)
-        (element K a)
+        (set K (alloca 10))
+        (set-element K 0 1)
+        (element K 0)
 ))

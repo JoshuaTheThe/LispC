@@ -28,6 +28,10 @@ Tokeniser::Token Tokeniser::TokeniseIdentifier(char X)
         Tokeniser::Token Token{.Type = Tokeniser::TYPE_IDENTIFIER, .Integer = 0};
         while (((X >= 'A' && X <= 'Z') || (X >= 'a' && X <= 'z') || X == '_' || X == '-') && this->Position <= this->Input.size())
         {
+                if  (X == '-')
+                {
+                        X = '_';
+                }
                 std::string Y{X};
                 Token.Identifier.append(Y);
                 X = this->Advance();
