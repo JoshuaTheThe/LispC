@@ -11,7 +11,7 @@ void CodeGenerator::GenerateIf(AST *tree)
         size_t skipLabel = lines.size();
         Generate(tree->GetChildren()[0]);
         size_t elseLabel = lines.size();
-        this->lines.push_back("\ttest eax, eax");
+        this->lines.push_back("\tpop eax");
         this->lines.push_back("\tjz " + stack.top().FunctionName + ".m" + std::to_string(elseLabel));
 
         /* Then */

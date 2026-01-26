@@ -18,7 +18,7 @@ foo:
 	setg al
 	movzx eax, al
 	push eax
-	test eax, eax
+	pop eax
 	jz foo.m19
 	push 1
 	push dword [ebp+8]
