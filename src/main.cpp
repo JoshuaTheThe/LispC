@@ -92,7 +92,7 @@ int main(int argc, char **argv)
         Parser p(tokens);
         AST *tree = p.ParseExpression();
 
-        display(tree, 0);
+        // display(tree, 0);
 
         CodeGenerator codegen = CodeGenerator();
         codegen.Generate(tree);
