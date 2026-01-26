@@ -18,7 +18,8 @@ void CodeGenerator::GenerateString(AST *tree)
         type.as.Integer = 1;
         typestack.push(type);
         strings.push_back(tree->GetIdentifier());
-        this->lines.push_back("\tpush _string_" + std::to_string(strings.size()));
+        this->lines.push_back("\tlea ebx, [_string_" + std::to_string(strings.size()) + "]");
+        this->lines.push_back("\tpush ebx");
 }
 
 CodeGenerator::Variable *CodeGenerator::FindVar(AST *tree)
