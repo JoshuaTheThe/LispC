@@ -1,0 +1,15 @@
+(fn main argc argv (
+        (extern fopen)
+        (extern fclose)
+        (extern fread)
+        (extern printf)
+        (declare f)
+        (declare buff)
+        (set buff (alloca 260))
+        (if (gt argc 1) (
+                (set f (fopen (deref (add argv 4)) "r")
+                (fread buff 1 256 f)
+                (printf "%s" buff)
+                (fclose f)
+        ))
+))

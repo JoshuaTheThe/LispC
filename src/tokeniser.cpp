@@ -2,7 +2,7 @@
 
 bool Tokeniser::IsWhiteSpace(char X)
 {
-        return (X == ' ') || (X == '\t') || (X == '\n');
+        return (X == ' ') || (X == '\t') || (X == '\n') || (X == '\r');
 }
 
 char Tokeniser::Advance(void)
