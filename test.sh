@@ -1,5 +1,6 @@
-./bin/lispc tests/$1.lisp > test.s
-nasm test.s -o test.o -felf32
-cc test.o -o test -m32
-./test
+./bin/lispc tests/$1.lisp > $1.s
+nasm $1.s -o $1.o -f elf32
+cc $1.o -o $1 -m32
+strip --strip-all $1
+./$1
 echo $?
