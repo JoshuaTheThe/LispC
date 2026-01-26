@@ -180,7 +180,7 @@ void CodeGenerator::GenerateCall(AST *tree)
         else if (Function == "deref" && argc == 1)
         {
                 this->lines.push_back("\tpop eax");
-                this->lines.push_back("\tpush [eax]");
+                this->lines.push_back("\tpush dword [eax]");
         }
         else if (Function == "setderef" && argc == 2)
         {
