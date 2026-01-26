@@ -32,6 +32,10 @@ void display(AST *tree, size_t depth = 0)
                 std::cerr << "Structure: " << tree->GetIdentifier() << "\n";
                 break;
 
+        case AST::AST_SET:
+                std::cerr << "Set: " << tree->GetIdentifier() << "\n";
+                break;
+
         case AST::AST_FUNCTION:
         {
                 std::string name = tree->GetIdentifier().empty() ? "<anonymous>" : tree->GetIdentifier();

@@ -5,9 +5,9 @@
         {                                           \
                 this->lines.push_back("\tpop eax"); \
                 this->lines.push_back("\tpop ebx"); \
-                this->right = typestack.top();      \
-                this->typestack.pop();              \
                 this->left = typestack.top();       \
+                this->typestack.pop();              \
+                this->right = typestack.top();      \
                 this->typestack.pop();              \
                                                     \
         } while (0)
@@ -235,5 +235,9 @@ void CodeGenerator::GenerateCall(AST *tree)
                 this->lines.push_back("\tcall " + Function);
                 this->lines.push_back("\tadd esp, " + std::to_string(4 * argc));
                 this->lines.push_back("\tpush eax");
+                Type type;
+                type.TypeType = Type::TYPE_INTEGER;
+                type.as.Integer = -1;
+                typestack.push(type);
         }
 }
