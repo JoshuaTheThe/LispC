@@ -3,6 +3,8 @@
 (extern printf str)
 (extern memset d v l)
 (extern strcmp a b)
+(extern fopen p m)
+(extern fclose f)
 
 (fn setup-keywords keywords (
         (set-element keywords 0 "fn")
@@ -86,12 +88,14 @@
         (declare source)
         (declare keywords-size)
         (declare pp)
+        (declare fp)
         (set keywords-size (mul 26 4))
         (set keywords (alloca keywords-size))
         (set identifier (alloca 32))
         (set pp (alloca 4))
+        (set fp 0)
         (if (gt argc 1)
-                (set source (element argv 4))
+                (set fp (fopen (element argv 4) "r"))
                 (set source "(fn main)"))
         (setup-keywords keywords)
         
@@ -104,6 +108,7 @@
         ))
         
         (mainloop source keywords identifier pp)
+        (if fp (fclose fp))
 ))
 
 )
