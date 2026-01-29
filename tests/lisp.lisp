@@ -17,7 +17,11 @@
         (set-element keywords 0 "fn")
         (set-element keywords 4 "if")
         (set-element keywords 8 "declare")
+
+	; Unused in C++ bootstrapped compiler, so we will not impl
         (set-element keywords 12 "struct")
+
+        ; TODO
         (set-element keywords 16 "set")
         (set-element keywords 20 "add")
         (set-element keywords 24 "sub")
@@ -171,26 +175,27 @@
                 (set-element variable-names n (hash name))
                 (set-element variable-offsets n ebp)
                 (parse-declaration-arguments (element pp 0) keywords identifier pp variable-names variable-offsets (add n 4) (add ebp 4))
-        ))
+        ) (div n 4))
 ))
 
-(fn parse-end source keywords identifier pp local-var-names local-var-offsets n (
+(fn parse-end source keywords identifier pp local-var-names local-var-offsets n variable-count (
         (declare token)
         (declare ppb)
         (set ppb (alloca 4))
         (set token (get-token (element pp 0) keywords identifier ppb))
         (if (neq token 2) (
-                (parse-primary (element pp 0) keywords identifier pp local-var-names local-var-offsets)
-                (parse-end (element pp 0) keywords identifier pp local-var-names local-var-offsets (add n 1))
+                (parse-primary (element pp 0) keywords identifier pp local-var-names local-var-offsets variable-count)
+                (parse-end (element pp 0) keywords identifier pp local-var-names local-var-offsets (add n 1) variable-count)
         ) ((set token (get-token (element pp 0) keywords identifier pp)) n))
 ))
 
-(fn parse-nested source keywords identifier pp variable-names variable-offsets (
+(fn parse-nested source keywords identifier pp variable-names variable-offsets variable-count (
         (declare tok-id)
         (declare name-tok)
         (declare fn-name)
         (declare local-var-names)
         (declare local-var-offsets)
+	(declare local-var-count)
         (declare count)
         (declare A)
         (declare B)
@@ -203,6 +208,12 @@
         
         (set fn-name (alloca 32))
         (set tok-id (get-token (element pp 0) keywords fn-name pp))
+
+	; First is count, second is EBP
+	(set local-var-count (alloca 8))
+	(set-element local-var-count 0 0)
+	(set-element local-var-count 4 0)
+
         ; Function
         (if (eq tok-id 16) (
                 (set name-tok (get-token (element pp 0) keywords fn-name pp))
@@ -215,16 +226,44 @@
                 (printf "\tpush ebp\n")
                 (printf "\tmov ebp, esp\n")
                 
-                (parse-declaration-arguments source keywords identifier pp local-var-names local-var-offsets 0 4)
-                (parse-end source keywords identifier pp local-var-names local-var-offsets 0)
+		(set-element local-var-count 0 (parse-declaration-arguments source keywords identifier pp local-var-names local-var-offsets 0 4))
+		(set-element local-var-count 4 (sub 0 4))
+                (parse-end source keywords identifier pp local-var-names local-var-offsets 0 local-var-count)
                 
                 (printf "%s.end:\n" fn-name)
                 (printf "\tpop eax\n")
                 (printf "\tmov esp, ebp\n")
                 (printf "\tpop ebp\n")
                 (printf "\tret\n")
-        ))
-        
+        )
+
+	; Declare
+	(if (eq tok-id 18) (
+                (set name-tok (get-token (element pp 0) keywords fn-name pp))
+                (if (neq name-tok 3) (
+                        (printf "The Fuck Did You Do?\n")
+                        (exit 1)
+                ))
+		
+		(set-element variable-names (mul (element variable-count 0) 4) (hash fn-name))
+		(set-element variable-offsets (mul (element variable-count 0) 4) (element variable-count 4))
+		(set-element variable-count 4 (sub (element variable-count 4) 4))
+		(set-element variable-count 0 (add (element variable-count 0) 1))
+                (parse-end source keywords identifier pp variable-names variable-offsets 0 variable-count)
+		(printf "\tsub esp, %d\n" (mul 4 1));
+	)
+	
+	; Set
+	(if (eq tok-id 20) (
+                (set name-tok (get-token (element pp 0) keywords fn-name pp))
+                (if (neq name-tok 3) (
+                        (printf "The Fuck Did You Do?\n")
+                        (exit 1)
+                ))
+                (parse-end source keywords identifier pp variable-names variable-offsets 0 variable-count)
+		(printf "\tpop [ebp+%d]\n" (find-variable variable-names variable-offsets variable-count (hash fn-name) 0))
+	)
+
         ; If
         (if (eq tok-id 17) (
                 (set A (element pp 4))
@@ -235,19 +274,19 @@
                 (set-element pp 4 (add (element pp 4) 1))
                 
                 ; Condition
-                (parse-primary (element pp 0) keywords identifier pp local-var-names local-var-offsets 0)
+                (parse-primary (element pp 0) keywords identifier pp variable-names variable-offsets 0 variable-count)
                 (printf "\tpop eax\n")
                 (printf "\ttest eax, eax\n")
                 (printf "\tjz m%d\n" C)
                 
                 ; Then
                 (printf "m%d:\n" A)
-                (parse-primary (element pp 0) keywords identifier pp local-var-names local-var-offsets 0)
+                (parse-primary (element pp 0) keywords identifier pp variable-names variable-offsets 0 variable-count)
                 (printf "\tjmp m%d\n" B)
                 
                 ; Else
                 (printf "m%d:\n" C)
-                (parse-end source keywords identifier pp local-var-names local-var-offsets 0)
+                (parse-end (element pp 0) keywords identifier pp variable-names variable-offsets 0 variable-count)
                 (printf "m%d:\n" B)
         )
         
@@ -256,19 +295,27 @@
                 (set count (parse-end source keywords identifier pp local-var-names local-var-offsets 0))
                 (printf "\tcall %s\n" fn-name)
                 (printf "\tadd esp, %d\n" (mul count 4))
-        ) (parse-end (element pp 0) keywords identifier pp local-var-names local-var-offsets 0)))
+        ) (parse-end (element pp 0) keywords identifier pp local-var-names local-var-offsets 0 variable-count))))))
 ))
 
-(fn parse-primary source keywords identifier pp variable-names variable-offsets (
+(fn find-variable variable-names variable-offsets variable-count hashed n (
+	(if (lt n (element variable-count 0)) (
+		(if (eq (element variable-names (mul n 4)) hashed)
+		  	((element variable-offsets (mul n 4)))
+		  	(find-variable variable-names variable-offsets variable-count hashed (add n 1)))
+	))
+))
+
+(fn parse-primary source keywords identifier pp variable-names variable-offsets variable-count (
         (declare tok-id)
         (set tok-id (get-token (element pp 0) keywords identifier pp))
         ; NUMBER
         (if (eq tok-id 4) ((printf "\tpush %s\n" identifier)))
         ; IDENTIFIER
-        (if (eq tok-id 3) ((printf "\tpush %s\n" identifier)))
+        (if (eq tok-id 3) ((printf "\tpush [ebp+%d]\n" (find-variable variable-names variable-offsets variable-count (hash identifier) 0))))
         ; LPAREN ... RPAREN
         (if (eq tok-id 1) (
-                (parse-nested (element pp 0) keywords identifier pp)
+                (parse-nested (element pp 0) keywords identifier pp variable-names variable-offsets variable-count)
         ))
 ))
 
@@ -292,7 +339,7 @@
                 (set fp (fopen (element argv 4) "r"))
                 (fread buff 1 65536 fp)
                 (set source buff))
-                (set source "(fn main a b c ((if 3 2 1)))"))
+                (set source "(fn main a b c ((declare x) (set x 2) x))"))
         (set-element pp 0 source)
         (setup-keywords keywords)
         

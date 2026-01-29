@@ -1283,13 +1283,20 @@ parse_declaration_arguments:
 	push eax
 	jmp parse_declaration_arguments.m37
 parse_declaration_arguments.m36:
+	push 4
+	push dword [ebp+32]
+	pop eax
+	pop ebx
+	cdq
+	div ebx
+	push eax
 parse_declaration_arguments.m37:
 	pop eax
 	mov esp, ebp
 	pop ebp
 	ret
 parse_declaration_arguments.m1203:
-	jmp parse_end.m1290
+	jmp parse_end.m1297
 	global parse_end
 parse_end:
 	push ebp
@@ -1325,6 +1332,7 @@ parse_end:
 	pop eax
 	test eax, eax
 	jz parse_end.m38
+	push dword [ebp+36]
 	push dword [ebp+28]
 	push dword [ebp+24]
 	push dword [ebp+20]
@@ -1337,8 +1345,9 @@ parse_end:
 	add ebx, edx
 	push dword [ebx]
 	call parse_primary
-	add esp, 24
+	add esp, 28
 	push eax
+	push dword [ebp+36]
 	push 1
 	push dword [ebp+32]
 	pop eax
@@ -1357,7 +1366,7 @@ parse_end:
 	add ebx, edx
 	push dword [ebx]
 	call parse_end
-	add esp, 28
+	add esp, 32
 	push eax
 	jmp parse_end.m39
 parse_end.m38:
@@ -1380,12 +1389,13 @@ parse_end.m39:
 	mov esp, ebp
 	pop ebp
 	ret
-parse_end.m1290:
-	jmp parse_nested.m1382
+parse_end.m1297:
+	jmp parse_nested.m1391
 	global parse_nested
 parse_nested:
 	push ebp
 	mov ebp, esp
+	sub esp, 4
 	sub esp, 4
 	sub esp, 4
 	sub esp, 4
@@ -1423,6 +1433,25 @@ parse_nested:
 	add esp, 16
 	push eax
 	pop dword [ebp+-4]
+	push 8
+	pop eax
+	sub esp, eax
+	push esp
+	pop dword [ebp+-24]
+	push 0
+	push 0
+	push dword [ebp+-24]
+	pop edx
+	pop ebx
+	add ebx, edx
+	pop dword [ebx]
+	push 0
+	push 4
+	push dword [ebp+-24]
+	pop edx
+	pop ebx
+	add ebx, edx
+	pop dword [ebx]
 	push 16
 	push dword [ebp+-4]
 	pop eax
@@ -1504,6 +1533,25 @@ parse_nested.m43:
 	add esp, 32
 	push eax
 	push 0
+	push dword [ebp+-24]
+	pop edx
+	pop ebx
+	add ebx, edx
+	pop dword [ebx]
+	push 4
+	push 0
+	pop eax
+	pop ebx
+	sub eax, ebx
+	push eax
+	push 4
+	push dword [ebp+-24]
+	pop edx
+	pop ebx
+	add ebx, edx
+	pop dword [ebx]
+	push dword [ebp+-24]
+	push 0
 	push dword [ebp+-20]
 	push dword [ebp+-16]
 	push dword [ebp+20]
@@ -1511,7 +1559,7 @@ parse_nested.m43:
 	push dword [ebp+12]
 	push dword [ebp+8]
 	call parse_end
-	add esp, 28
+	add esp, 32
 	push eax
 	push dword [ebp+-12]
 	lea ebx, [_string_30]
@@ -1541,8 +1589,7 @@ parse_nested.m43:
 	push eax
 	jmp parse_nested.m41
 parse_nested.m40:
-parse_nested.m41:
-	push 17
+	push 18
 	push dword [ebp+-4]
 	pop eax
 	pop ebx
@@ -1553,16 +1600,104 @@ parse_nested.m41:
 	pop eax
 	test eax, eax
 	jz parse_nested.m44
-	push 4
+	push dword [ebp+20]
+	push dword [ebp+-12]
+	push dword [ebp+12]
+	push 0
 	push dword [ebp+20]
 	pop edx
 	pop ebx
 	add ebx, edx
 	push dword [ebx]
-	pop dword [ebp+-28]
+	call get_token
+	add esp, 16
+	push eax
+	pop dword [ebp+-8]
+	push 3
+	push dword [ebp+-8]
+	pop eax
+	pop ebx
+	cmp eax, ebx
+	setne al
+	movzx eax, al
+	push eax
+	pop eax
+	test eax, eax
+	jz parse_nested.m46
+	lea ebx, [_string_35]
+	push ebx
+	call printf
+	add esp, 4
+	push eax
 	push 1
+	call exit
+	add esp, 4
+	push eax
+	jmp parse_nested.m47
+parse_nested.m46:
+parse_nested.m47:
+	push dword [ebp+-12]
+	call hash
+	add esp, 4
+	push eax
 	push 4
-	push dword [ebp+20]
+	push 0
+	push dword [ebp+32]
+	pop edx
+	pop ebx
+	add ebx, edx
+	push dword [ebx]
+	pop eax
+	pop ebx
+	mul ebx
+	push eax
+	push dword [ebp+24]
+	pop edx
+	pop ebx
+	add ebx, edx
+	pop dword [ebx]
+	push 4
+	push dword [ebp+32]
+	pop edx
+	pop ebx
+	add ebx, edx
+	push dword [ebx]
+	push 4
+	push 0
+	push dword [ebp+32]
+	pop edx
+	pop ebx
+	add ebx, edx
+	push dword [ebx]
+	pop eax
+	pop ebx
+	mul ebx
+	push eax
+	push dword [ebp+28]
+	pop edx
+	pop ebx
+	add ebx, edx
+	pop dword [ebx]
+	push 4
+	push 4
+	push dword [ebp+32]
+	pop edx
+	pop ebx
+	add ebx, edx
+	push dword [ebx]
+	pop eax
+	pop ebx
+	sub eax, ebx
+	push eax
+	push 4
+	push dword [ebp+32]
+	pop edx
+	pop ebx
+	add ebx, edx
+	pop dword [ebx]
+	push 1
+	push 0
+	push dword [ebp+32]
 	pop edx
 	pop ebx
 	add ebx, edx
@@ -1571,12 +1706,123 @@ parse_nested.m41:
 	pop ebx
 	add eax, ebx
 	push eax
-	push 4
-	push dword [ebp+20]
+	push 0
+	push dword [ebp+32]
 	pop edx
 	pop ebx
 	add ebx, edx
 	pop dword [ebx]
+	push dword [ebp+32]
+	push 0
+	push dword [ebp+28]
+	push dword [ebp+24]
+	push dword [ebp+20]
+	push dword [ebp+16]
+	push dword [ebp+12]
+	push dword [ebp+8]
+	call parse_end
+	add esp, 32
+	push eax
+	push 1
+	push 4
+	pop eax
+	pop ebx
+	mul ebx
+	push eax
+	lea ebx, [_string_36]
+	push ebx
+	call printf
+	add esp, 8
+	push eax
+	jmp parse_nested.m45
+parse_nested.m44:
+	push 20
+	push dword [ebp+-4]
+	pop eax
+	pop ebx
+	cmp eax, ebx
+	sete al
+	movzx eax, al
+	push eax
+	pop eax
+	test eax, eax
+	jz parse_nested.m48
+	push dword [ebp+20]
+	push dword [ebp+-12]
+	push dword [ebp+12]
+	push 0
+	push dword [ebp+20]
+	pop edx
+	pop ebx
+	add ebx, edx
+	push dword [ebx]
+	call get_token
+	add esp, 16
+	push eax
+	pop dword [ebp+-8]
+	push 3
+	push dword [ebp+-8]
+	pop eax
+	pop ebx
+	cmp eax, ebx
+	setne al
+	movzx eax, al
+	push eax
+	pop eax
+	test eax, eax
+	jz parse_nested.m50
+	lea ebx, [_string_37]
+	push ebx
+	call printf
+	add esp, 4
+	push eax
+	push 1
+	call exit
+	add esp, 4
+	push eax
+	jmp parse_nested.m51
+parse_nested.m50:
+parse_nested.m51:
+	push dword [ebp+32]
+	push 0
+	push dword [ebp+28]
+	push dword [ebp+24]
+	push dword [ebp+20]
+	push dword [ebp+16]
+	push dword [ebp+12]
+	push dword [ebp+8]
+	call parse_end
+	add esp, 32
+	push eax
+	push 0
+	push dword [ebp+-12]
+	call hash
+	add esp, 4
+	push eax
+	push dword [ebp+32]
+	push dword [ebp+28]
+	push dword [ebp+24]
+	call find_variable
+	add esp, 20
+	push eax
+	lea ebx, [_string_38]
+	push ebx
+	call printf
+	add esp, 8
+	push eax
+	jmp parse_nested.m49
+parse_nested.m48:
+	push 17
+	push dword [ebp+-4]
+	pop eax
+	pop ebx
+	cmp eax, ebx
+	sete al
+	movzx eax, al
+	push eax
+	pop eax
+	test eax, eax
+	jz parse_nested.m52
 	push 4
 	push dword [ebp+20]
 	pop edx
@@ -1625,9 +1871,34 @@ parse_nested.m41:
 	pop ebx
 	add ebx, edx
 	pop dword [ebx]
+	push 4
+	push dword [ebp+20]
+	pop edx
+	pop ebx
+	add ebx, edx
+	push dword [ebx]
+	pop dword [ebp+-40]
+	push 1
+	push 4
+	push dword [ebp+20]
+	pop edx
+	pop ebx
+	add ebx, edx
+	push dword [ebx]
+	pop eax
+	pop ebx
+	add eax, ebx
+	push eax
+	push 4
+	push dword [ebp+20]
+	pop edx
+	pop ebx
+	add ebx, edx
+	pop dword [ebx]
+	push dword [ebp+32]
 	push 0
-	push dword [ebp+-20]
-	push dword [ebp+-16]
+	push dword [ebp+28]
+	push dword [ebp+24]
 	push dword [ebp+20]
 	push dword [ebp+16]
 	push dword [ebp+12]
@@ -1638,75 +1909,82 @@ parse_nested.m41:
 	add ebx, edx
 	push dword [ebx]
 	call parse_primary
-	add esp, 28
+	add esp, 32
 	push eax
-	lea ebx, [_string_35]
-	push ebx
-	call printf
-	add esp, 4
-	push eax
-	lea ebx, [_string_36]
-	push ebx
-	call printf
-	add esp, 4
-	push eax
-	push dword [ebp+-36]
-	lea ebx, [_string_37]
-	push ebx
-	call printf
-	add esp, 8
-	push eax
-	push dword [ebp+-28]
-	lea ebx, [_string_38]
-	push ebx
-	call printf
-	add esp, 8
-	push eax
-	push 0
-	push dword [ebp+-20]
-	push dword [ebp+-16]
-	push dword [ebp+20]
-	push dword [ebp+16]
-	push dword [ebp+12]
-	push 0
-	push dword [ebp+20]
-	pop edx
-	pop ebx
-	add ebx, edx
-	push dword [ebx]
-	call parse_primary
-	add esp, 28
-	push eax
-	push dword [ebp+-32]
 	lea ebx, [_string_39]
 	push ebx
 	call printf
-	add esp, 8
+	add esp, 4
 	push eax
-	push dword [ebp+-36]
 	lea ebx, [_string_40]
 	push ebx
 	call printf
-	add esp, 8
+	add esp, 4
 	push eax
-	push 0
-	push dword [ebp+-20]
-	push dword [ebp+-16]
-	push dword [ebp+20]
-	push dword [ebp+16]
-	push dword [ebp+12]
-	push dword [ebp+8]
-	call parse_end
-	add esp, 28
-	push eax
-	push dword [ebp+-32]
+	push dword [ebp+-40]
 	lea ebx, [_string_41]
 	push ebx
 	call printf
 	add esp, 8
 	push eax
-	jmp parse_nested.m45
-parse_nested.m44:
+	push dword [ebp+-32]
+	lea ebx, [_string_42]
+	push ebx
+	call printf
+	add esp, 8
+	push eax
+	push dword [ebp+32]
+	push 0
+	push dword [ebp+28]
+	push dword [ebp+24]
+	push dword [ebp+20]
+	push dword [ebp+16]
+	push dword [ebp+12]
+	push 0
+	push dword [ebp+20]
+	pop edx
+	pop ebx
+	add ebx, edx
+	push dword [ebx]
+	call parse_primary
+	add esp, 32
+	push eax
+	push dword [ebp+-36]
+	lea ebx, [_string_43]
+	push ebx
+	call printf
+	add esp, 8
+	push eax
+	push dword [ebp+-40]
+	lea ebx, [_string_44]
+	push ebx
+	call printf
+	add esp, 8
+	push eax
+	push dword [ebp+32]
+	push 0
+	push dword [ebp+28]
+	push dword [ebp+24]
+	push dword [ebp+20]
+	push dword [ebp+16]
+	push dword [ebp+12]
+	push 0
+	push dword [ebp+20]
+	pop edx
+	pop ebx
+	add ebx, edx
+	push dword [ebx]
+	call parse_end
+	add esp, 32
+	push eax
+	push dword [ebp+-36]
+	lea ebx, [_string_45]
+	push ebx
+	call printf
+	add esp, 8
+	push eax
+	jmp parse_nested.m53
+parse_nested.m52:
 	push 3
 	push dword [ebp+-4]
 	pop eax
@@ -1717,7 +1995,7 @@ parse_nested.m44:
 	push eax
 	pop eax
 	test eax, eax
-	jz parse_nested.m46
+	jz parse_nested.m54
 	push 0
 	push dword [ebp+-20]
 	push dword [ebp+-16]
@@ -1728,26 +2006,27 @@ parse_nested.m44:
 	call parse_end
 	add esp, 28
 	push eax
-	pop dword [ebp+-24]
+	pop dword [ebp+-28]
 	push dword [ebp+-12]
-	lea ebx, [_string_42]
+	lea ebx, [_string_46]
 	push ebx
 	call printf
 	add esp, 8
 	push eax
 	push 4
-	push dword [ebp+-24]
+	push dword [ebp+-28]
 	pop eax
 	pop ebx
 	mul ebx
 	push eax
-	lea ebx, [_string_43]
+	lea ebx, [_string_47]
 	push ebx
 	call printf
 	add esp, 8
 	push eax
-	jmp parse_nested.m47
-parse_nested.m46:
+	jmp parse_nested.m55
+parse_nested.m54:
+	push dword [ebp+32]
 	push 0
 	push dword [ebp+-20]
 	push dword [ebp+-16]
@@ -1761,16 +2040,96 @@ parse_nested.m46:
 	add ebx, edx
 	push dword [ebx]
 	call parse_end
-	add esp, 28
+	add esp, 32
 	push eax
-parse_nested.m47:
+parse_nested.m55:
+parse_nested.m53:
+parse_nested.m49:
 parse_nested.m45:
+parse_nested.m41:
 	pop eax
 	mov esp, ebp
 	pop ebp
 	ret
-parse_nested.m1382:
-	jmp parse_primary.m1771
+parse_nested.m1391:
+	jmp find_variable.m2053
+	global find_variable
+find_variable:
+	push ebp
+	mov ebp, esp
+	push 0
+	push dword [ebp+16]
+	pop edx
+	pop ebx
+	add ebx, edx
+	push dword [ebx]
+	push dword [ebp+24]
+	pop eax
+	pop ebx
+	cmp eax, ebx
+	setl al
+	movzx eax, al
+	push eax
+	pop eax
+	test eax, eax
+	jz find_variable.m56
+	push dword [ebp+20]
+	push 4
+	push dword [ebp+24]
+	pop eax
+	pop ebx
+	mul ebx
+	push eax
+	push dword [ebp+8]
+	pop edx
+	pop ebx
+	add ebx, edx
+	push dword [ebx]
+	pop eax
+	pop ebx
+	cmp eax, ebx
+	sete al
+	movzx eax, al
+	push eax
+	pop eax
+	test eax, eax
+	jz find_variable.m58
+	push 4
+	push dword [ebp+24]
+	pop eax
+	pop ebx
+	mul ebx
+	push eax
+	push dword [ebp+12]
+	pop edx
+	pop ebx
+	add ebx, edx
+	push dword [ebx]
+	jmp find_variable.m59
+find_variable.m58:
+	push 1
+	push dword [ebp+24]
+	pop eax
+	pop ebx
+	add eax, ebx
+	push eax
+	push dword [ebp+20]
+	push dword [ebp+16]
+	push dword [ebp+12]
+	push dword [ebp+8]
+	call find_variable
+	add esp, 20
+	push eax
+find_variable.m59:
+	jmp find_variable.m57
+find_variable.m56:
+find_variable.m57:
+	pop eax
+	mov esp, ebp
+	pop ebp
+	ret
+find_variable.m2053:
+	jmp parse_primary.m2130
 	global parse_primary
 parse_primary:
 	push ebp
@@ -1799,16 +2158,16 @@ parse_primary:
 	push eax
 	pop eax
 	test eax, eax
-	jz parse_primary.m48
+	jz parse_primary.m60
 	push dword [ebp+16]
-	lea ebx, [_string_44]
+	lea ebx, [_string_48]
 	push ebx
 	call printf
 	add esp, 8
 	push eax
-	jmp parse_primary.m49
-parse_primary.m48:
-parse_primary.m49:
+	jmp parse_primary.m61
+parse_primary.m60:
+parse_primary.m61:
 	push 3
 	push dword [ebp+-4]
 	pop eax
@@ -1819,16 +2178,26 @@ parse_primary.m49:
 	push eax
 	pop eax
 	test eax, eax
-	jz parse_primary.m50
+	jz parse_primary.m62
+	push 0
 	push dword [ebp+16]
-	lea ebx, [_string_45]
+	call hash
+	add esp, 4
+	push eax
+	push dword [ebp+32]
+	push dword [ebp+28]
+	push dword [ebp+24]
+	call find_variable
+	add esp, 20
+	push eax
+	lea ebx, [_string_49]
 	push ebx
 	call printf
 	add esp, 8
 	push eax
-	jmp parse_primary.m51
-parse_primary.m50:
-parse_primary.m51:
+	jmp parse_primary.m63
+parse_primary.m62:
+parse_primary.m63:
 	push 1
 	push dword [ebp+-4]
 	pop eax
@@ -1839,7 +2208,10 @@ parse_primary.m51:
 	push eax
 	pop eax
 	test eax, eax
-	jz parse_primary.m52
+	jz parse_primary.m64
+	push dword [ebp+32]
+	push dword [ebp+28]
+	push dword [ebp+24]
 	push dword [ebp+20]
 	push dword [ebp+16]
 	push dword [ebp+12]
@@ -1850,17 +2222,17 @@ parse_primary.m51:
 	add ebx, edx
 	push dword [ebx]
 	call parse_nested
-	add esp, 16
+	add esp, 28
 	push eax
-	jmp parse_primary.m53
-parse_primary.m52:
-parse_primary.m53:
+	jmp parse_primary.m65
+parse_primary.m64:
+parse_primary.m65:
 	pop eax
 	mov esp, ebp
 	pop ebp
 	ret
-parse_primary.m1771:
-	jmp main.m1861
+parse_primary.m2130:
+	jmp main.m2233
 	global main
 main:
 	push ebp
@@ -1918,8 +2290,8 @@ main:
 	push eax
 	pop eax
 	test eax, eax
-	jz main.m54
-	lea ebx, [_string_46]
+	jz main.m66
+	lea ebx, [_string_50]
 	push ebx
 	push 4
 	push dword [ebp+12]
@@ -1940,12 +2312,12 @@ main:
 	push eax
 	push dword [ebp+-28]
 	pop dword [ebp+-12]
-	jmp main.m55
-main.m54:
-	lea ebx, [_string_47]
+	jmp main.m67
+main.m66:
+	lea ebx, [_string_51]
 	push ebx
 	pop dword [ebp+-12]
-main.m55:
+main.m67:
 	push dword [ebp+-12]
 	push 0
 	push dword [ebp+-20]
@@ -1957,7 +2329,7 @@ main.m55:
 	call setup_keywords
 	add esp, 4
 	push eax
-	jmp mainloop.m1958
+	jmp mainloop.m2330
 	global mainloop
 mainloop:
 	push ebp
@@ -1973,7 +2345,7 @@ mainloop:
 	pop dword [ebp+-4]
 	push dword [ebp+16]
 	push dword [ebp+-4]
-	lea ebx, [_string_48]
+	lea ebx, [_string_52]
 	push ebx
 	call printf
 	add esp, 12
@@ -1988,7 +2360,7 @@ mainloop:
 	push eax
 	pop eax
 	test eax, eax
-	jz mainloop.m56
+	jz mainloop.m68
 	push dword [ebp+20]
 	push dword [ebp+16]
 	push dword [ebp+12]
@@ -2001,14 +2373,14 @@ mainloop:
 	call mainloop
 	add esp, 16
 	push eax
-	jmp mainloop.m57
-mainloop.m56:
-mainloop.m57:
+	jmp mainloop.m69
+mainloop.m68:
+mainloop.m69:
 	pop eax
 	mov esp, ebp
 	pop ebp
 	ret
-mainloop.m1958:
+mainloop.m2330:
 	push 0
 	push 0
 	push dword [ebp+-20]
@@ -2021,19 +2393,19 @@ mainloop.m1958:
 	push dword [ebp+-24]
 	pop eax
 	test eax, eax
-	jz main.m58
+	jz main.m70
 	push dword [ebp+-24]
 	call fclose
 	add esp, 4
 	push eax
-	jmp main.m59
-main.m58:
-main.m59:
+	jmp main.m71
+main.m70:
+main.m71:
 	pop eax
 	mov esp, ebp
 	pop ebp
 	ret
-main.m1861:
+main.m2233:
 	section .rodata
 _string_1:
 	db 102
@@ -2296,6 +2668,83 @@ _string_34:
 	db 10
 	db 0
 _string_35:
+	db 84
+	db 104
+	db 101
+	db 32
+	db 70
+	db 117
+	db 99
+	db 107
+	db 32
+	db 68
+	db 105
+	db 100
+	db 32
+	db 89
+	db 111
+	db 117
+	db 32
+	db 68
+	db 111
+	db 63
+	db 10
+	db 0
+_string_36:
+	db 9
+	db 115
+	db 117
+	db 98
+	db 32
+	db 101
+	db 115
+	db 112
+	db 44
+	db 32
+	db 37
+	db 100
+	db 10
+	db 0
+_string_37:
+	db 84
+	db 104
+	db 101
+	db 32
+	db 70
+	db 117
+	db 99
+	db 107
+	db 32
+	db 68
+	db 105
+	db 100
+	db 32
+	db 89
+	db 111
+	db 117
+	db 32
+	db 68
+	db 111
+	db 63
+	db 10
+	db 0
+_string_38:
+	db 9
+	db 112
+	db 111
+	db 112
+	db 32
+	db 91
+	db 101
+	db 98
+	db 112
+	db 43
+	db 37
+	db 100
+	db 93
+	db 10
+	db 0
+_string_39:
 	db 9
 	db 112
 	db 111
@@ -2306,7 +2755,7 @@ _string_35:
 	db 120
 	db 10
 	db 0
-_string_36:
+_string_40:
 	db 9
 	db 116
 	db 101
@@ -2323,7 +2772,7 @@ _string_36:
 	db 120
 	db 10
 	db 0
-_string_37:
+_string_41:
 	db 9
 	db 106
 	db 122
@@ -2333,14 +2782,14 @@ _string_37:
 	db 100
 	db 10
 	db 0
-_string_38:
+_string_42:
 	db 109
 	db 37
 	db 100
 	db 58
 	db 10
 	db 0
-_string_39:
+_string_43:
 	db 9
 	db 106
 	db 109
@@ -2351,21 +2800,21 @@ _string_39:
 	db 100
 	db 10
 	db 0
-_string_40:
+_string_44:
 	db 109
 	db 37
 	db 100
 	db 58
 	db 10
 	db 0
-_string_41:
+_string_45:
 	db 109
 	db 37
 	db 100
 	db 58
 	db 10
 	db 0
-_string_42:
+_string_46:
 	db 9
 	db 99
 	db 97
@@ -2376,7 +2825,7 @@ _string_42:
 	db 115
 	db 10
 	db 0
-_string_43:
+_string_47:
 	db 9
 	db 97
 	db 100
@@ -2391,7 +2840,7 @@ _string_43:
 	db 100
 	db 10
 	db 0
-_string_44:
+_string_48:
 	db 9
 	db 112
 	db 117
@@ -2402,21 +2851,27 @@ _string_44:
 	db 115
 	db 10
 	db 0
-_string_45:
+_string_49:
 	db 9
 	db 112
 	db 117
 	db 115
 	db 104
 	db 32
+	db 91
+	db 101
+	db 98
+	db 112
+	db 43
 	db 37
-	db 115
+	db 100
+	db 93
 	db 10
 	db 0
-_string_46:
+_string_50:
 	db 114
 	db 0
-_string_47:
+_string_51:
 	db 40
 	db 102
 	db 110
@@ -2434,19 +2889,32 @@ _string_47:
 	db 32
 	db 40
 	db 40
-	db 105
-	db 102
+	db 100
+	db 101
+	db 99
+	db 108
+	db 97
+	db 114
+	db 101
 	db 32
-	db 51
+	db 120
+	db 41
+	db 32
+	db 40
+	db 115
+	db 101
+	db 116
+	db 32
+	db 120
 	db 32
 	db 50
-	db 32
-	db 49
 	db 41
+	db 32
+	db 120
 	db 41
 	db 41
 	db 0
-_string_48:
+_string_52:
 	db 84
 	db 111
 	db 107
