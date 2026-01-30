@@ -519,4 +519,5 @@
         (printf "\tsection .data\n")
         (emit-strings pp 0)
         (if fp (fclose fp))
+        0
 ))
