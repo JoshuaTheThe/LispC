@@ -133,11 +133,10 @@ void CodeGenerator::GenerateCall(AST *tree)
                 this->lines.push_back("\tpop eax");
                 this->lines.push_back("\tpush dword [eax]");
         }
-        else if (Function == "setderef" && argc == 2)
+        else if (Function == "set_deref" && argc == 2)
         {
                 _POP_EBX_EAX;
                 this->lines.push_back("\tmov [eax], ebx");
-                this->lines.push_back("\tpush [eax]");
         }
         else if (Function == "alloca" && argc == 1)
         {

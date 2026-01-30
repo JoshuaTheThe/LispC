@@ -12,7 +12,7 @@
         (set buff (alloca 1024))
         ; Open our file
         (set f (fopen "tests/4.lisp" "r"))
-                (if (neq f 0) (
+        (if (neq f 0) (
                 (set length (fread buff 1 1024 f))
                 ; Null Terminate
                 (if (lt length 1020)
